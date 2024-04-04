@@ -1,0 +1,31 @@
+import xarray as xr
+import cftime
+import numpy as np
+
+# Define the file paths explicitly
+files = [
+  "cesm2_files.nc for ensemble members per decade"
+]
+
+# Initialize an empty list to hold datasets
+datasets = []
+
+# Load each file as a dataset and append to the list
+for file in files:
+    ds = xr.open_dataset(file)
+    datasets.append(ds)
+
+# Concatenate the datasets along the time dimension
+ds_concat = xr.concat(datasets, dim="time")
+
+# Define the output file path
+output_file = "output_concatenated_file"
+
+# Save the concatenated dataset to the specified file
+ds_concat.to_netcdf(output_file)
+
+print(f"Concatenated dataset saved to {output_file}")
+
+# Make sure to close the datasets to free up resources
+for ds in datasets:
+    ds.close()
